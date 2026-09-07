@@ -1,0 +1,10 @@
+{
+  "description": "Create interactive and navigable mockups effortlessly, enabling designers and teams to visualize and test user experiences before development.",
+  "robots": {
+    "index": false
+  },
+  "accessibility": {
+    "addBypassLinks": false,
+    "ignoreReducedMotion": false
+  }
+}
