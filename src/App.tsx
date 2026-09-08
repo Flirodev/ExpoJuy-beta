@@ -1,12 +1,13 @@
 import { useState, useEffect } from "react";
 
-type Page = "inicio" | "sobre" | "sectores" | "programa" | "expositores" | "llegada" | "contacto";
+type Page = "inicio" | "sobre" | "sectores" | "programa" | "entradas" | "expositores" | "llegada" | "contacto";
 
 const NAV_LINKS: { id: Page; label: string }[] = [
   { id: "inicio", label: "Inicio" },
   { id: "sobre", label: "¿Qué es ExpoJuy?" },
   { id: "sectores", label: "Sectores" },
   { id: "programa", label: "Programa" },
+  { id: "entradas", label: "Entradas" },
   { id: "expositores", label: "Expositores" },
   { id: "llegada", label: "Cómo llegar" },
   { id: "contacto", label: "Contacto" },
@@ -687,15 +688,187 @@ function Programa() {
   );
 }
 
-function Expositores({ setPage }: { setPage: (p: Page) => void }) {
-  const [sent, setSent] = useState(false);
-  const [form, setForm] = useState({ empresa: "", contacto: "", email: "", telefono: "", sector: "", mensaje: "" });
+function Entradas() {
+  const tickets = [
+    {
+      tipo: "Entrada General",
+      precio: "Gratis",
+      desc: "Acceso libre a la exposición de stands en Ciudad Cultural.",
+      incluye: ["Acceso a todos los stands", "Actividades culturales", "Shows y degustaciones"],
+      destacado: false,
+      badge: null,
+    },
+    {
+      tipo: "Jornada de Negocios",
+      precio: "$8.500",
+      desc: "Acceso a las rondas de negocios internacionales de la mañana + exposición por la tarde.",
+      incluye: ["Rondas de negocios B2B", "Matchmaking internacional", "Coffee break incluido", "Acceso completo a la expo", "Certificado de participación"],
+      destacado: true,
+      badge: "MÁS ELEGIDO",
+    },
+    {
+      tipo: "Pase Full 4 días",
+      precio: "$22.000",
+      desc: "Acceso completo a los 4 días: rondas, exposición, foros y actividades especiales.",
+      incluye: ["Todo en Jornada de Negocios", "4 días completos", "Acceso a foros especiales", "Kit ExpoJuy 2026", "Almuerzo en jornadas de negocios"],
+      destacado: false,
+      badge: "MEJOR VALOR",
+    },
+  ];
 
-  function handleSubmit(e: React.FormEvent) {
-    e.preventDefault();
-    setSent(true);
-  }
+  const descuentos = [
+    { icon: "🎓", titulo: "Estudiantes universitarios", desc: "50% de descuento con credencial universitaria vigente" },
+    { icon: "👥", titulo: "Grupos (+10 personas)", desc: "30% de descuento en Jornada de Negocios y Pase Full" },
+    { icon: "🏢", titulo: "Socios de la Cámara", desc: "40% de descuento en todos los pases pagos" },
+    { icon: "🌍", titulo: "Delegaciones extranjeras", desc: "Entrada bonificada — consultar con la organización" },
+  ];
 
+  return (
+    <div className="min-h-screen">
+      <div className="bg-[#6B3FA0] py-16 px-6 md:px-10">
+        <div className="max-w-5xl mx-auto">
+          <p className="text-[#00C4C8] font-bold text-sm uppercase tracking-widest mb-3">Entradas</p>
+          <h1 className="font-[family-name:var(--font-display)] text-3xl md:text-5xl font-black text-white mb-2">
+            Conseguí tu entrada
+          </h1>
+          <p className="text-white/70">9 al 12 de octubre de 2026 · Ciudad Cultural · San Salvador de Jujuy</p>
+        </div>
+      </div>
+
+      {/* Ticket cards */}
+      <section className="py-16 px-6 md:px-10 bg-[#f5f2fa]">
+        <div className="max-w-5xl mx-auto">
+          <div className="grid md:grid-cols-3 gap-6 mb-6">
+            {tickets.map((t) => (
+              <div
+                key={t.tipo}
+                className={`rounded-xl border-2 flex flex-col overflow-hidden ${
+                  t.destacado
+                    ? "border-[#6B3FA0] shadow-xl shadow-[#6B3FA0]/10"
+                    : "border-[#d0c8ec] bg-white"
+                }`}
+              >
+                {t.badge && (
+                  <div className={`text-center text-[10px] font-black uppercase tracking-widest py-2 ${t.destacado ? "bg-[#6B3FA0] text-white" : "bg-[#00C4C8] text-white"}`}>
+                    {t.badge}
+                  </div>
+                )}
+                <div className={`p-6 flex flex-col flex-1 ${t.destacado ? "bg-white" : ""}`}>
+                  <h3 className="font-[family-name:var(--font-display)] font-black text-[#1a1030] text-xl mb-1">{t.tipo}</h3>
+                  <p className="text-gray-500 text-xs mb-5 leading-relaxed">{t.desc}</p>
+                  <div className="mb-6">
+                    <span className="font-[family-name:var(--font-display)] font-black text-4xl text-[#6B3FA0]">{t.precio}</span>
+                    {t.precio !== "Gratis" && <span className="text-gray-400 text-sm ml-1">/ persona</span>}
+                  </div>
+                  <ul className="flex flex-col gap-2 mb-8 flex-1">
+                    {t.incluye.map((item) => (
+                      <li key={item} className="flex items-center gap-2 text-sm text-gray-600">
+                        <span className="text-[#00C4C8] font-bold text-xs">✓</span>
+                        {item}
+                      </li>
+                    ))}
+                  </ul>
+                  <a
+                    href="https://entradas.expojuy.com.ar"
+                    target="_blank"
+                    rel="noreferrer"
+                    className={`block text-center font-bold text-sm py-3 rounded-lg transition-colors ${
+                      t.destacado
+                        ? "bg-[#6B3FA0] text-white hover:bg-[#4d2d78]"
+                        : "border-2 border-[#6B3FA0] text-[#6B3FA0] hover:bg-[#f5f2fa]"
+                    }`}
+                  >
+                    {t.precio === "Gratis" ? "Es gratis — entrá directo" : "Comprar entrada"}
+                  </a>
+                </div>
+              </div>
+            ))}
+          </div>
+
+          {/* Ticket link CTA */}
+          <div className="bg-[#6B3FA0] rounded-xl p-6 flex flex-col sm:flex-row items-center justify-between gap-4">
+            <div>
+              <div className="font-bold text-white mb-1">🎟 Plataforma oficial de venta</div>
+              <div className="text-white/70 text-sm">entradas.expojuy.com.ar — disponible desde el 1 de agosto de 2026</div>
+            </div>
+            <a
+              href="https://entradas.expojuy.com.ar"
+              target="_blank"
+              rel="noreferrer"
+              className="bg-[#00C4C8] text-white font-bold text-sm px-6 py-3 rounded-lg hover:bg-[#009fa3] transition-colors whitespace-nowrap flex-shrink-0"
+            >
+              Ir a comprar entradas →
+            </a>
+          </div>
+        </div>
+      </section>
+
+      {/* Descuentos */}
+      <section className="py-16 px-6 md:px-10 bg-white border-t border-[#d0c8ec]">
+        <div className="max-w-5xl mx-auto">
+          <p className="text-[#00C4C8] font-bold text-sm uppercase tracking-widest mb-3">Descuentos</p>
+          <h2 className="font-[family-name:var(--font-display)] text-2xl md:text-3xl font-black text-[#1a1030] mb-8">
+            Beneficios especiales
+          </h2>
+          <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-5">
+            {descuentos.map((d) => (
+              <div key={d.titulo} className="bg-[#f5f2fa] border border-[#d0c8ec] rounded-xl p-5">
+                <div className="text-3xl mb-3">{d.icon}</div>
+                <div className="font-bold text-[#1a1030] text-sm mb-2">{d.titulo}</div>
+                <div className="text-xs text-gray-500 leading-relaxed">{d.desc}</div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Puntos de venta físicos */}
+      <section className="py-16 px-6 md:px-10 bg-[#f5f2fa] border-t border-[#d0c8ec]">
+        <div className="max-w-5xl mx-auto grid md:grid-cols-2 gap-10">
+          <div>
+            <p className="text-[#00C4C8] font-bold text-sm uppercase tracking-widest mb-3">Puntos de venta presencial</p>
+            <h2 className="font-[family-name:var(--font-display)] text-2xl font-black text-[#1a1030] mb-6">
+              ¿Dónde conseguirlas?
+            </h2>
+            <ul className="flex flex-col gap-4">
+              {[
+                { lugar: "Cámara de Comercio Exterior de Jujuy", dir: "San Salvador de Jujuy — sede central", horario: "Lun–Vie 9:00–17:00 hs" },
+                { lugar: "Secretaría de Turismo de Jujuy", dir: "San Salvador de Jujuy — centro", horario: "Lun–Vie 8:00–16:00 hs" },
+                { lugar: "Ciudad Cultural (en el evento)", dir: "Av. de los Estudiantes Jujeños s/n", horario: "9 al 12 de octubre — en puerta" },
+              ].map((p) => (
+                <li key={p.lugar} className="bg-white rounded-lg border border-[#d0c8ec] p-4">
+                  <div className="font-semibold text-[#1a1030] text-sm mb-1">{p.lugar}</div>
+                  <div className="text-xs text-gray-500 mb-0.5">📍 {p.dir}</div>
+                  <div className="text-xs text-gray-500">🕘 {p.horario}</div>
+                </li>
+              ))}
+            </ul>
+          </div>
+          <div className="flex flex-col justify-center">
+            <div className="bg-[#6B3FA0]/5 border-2 border-dashed border-[#6B3FA0]/30 rounded-xl p-8 text-center">
+              <div className="text-5xl mb-4">📞</div>
+              <h3 className="font-[family-name:var(--font-display)] font-black text-[#1a1030] text-xl mb-2">
+                ¿Necesitás ayuda?
+              </h3>
+              <p className="text-gray-500 text-sm mb-5">
+                Consultá por grupos, delegaciones, descuentos especiales o accesibilidad.
+              </p>
+              <a
+                href="mailto:info@camcomexjujuy.com.ar?subject=Consulta%20entradas%20ExpoJuy%202026"
+                className="inline-block bg-[#6B3FA0] text-white font-bold text-sm px-6 py-3 rounded-lg hover:bg-[#4d2d78] transition-colors"
+              >
+                Solicitar información
+              </a>
+              <div className="mt-3 text-xs text-gray-400">info@camcomexjujuy.com.ar · +54 9 388 421-2955</div>
+            </div>
+          </div>
+        </div>
+      </section>
+    </div>
+  );
+}
+
+function Expositores() {
   return (
     <div className="min-h-screen">
       <div className="bg-[#6B3FA0] py-16 px-6 md:px-10">
@@ -713,73 +886,33 @@ function Expositores({ setPage }: { setPage: (p: Page) => void }) {
       <div className="py-16 px-6 md:px-10 bg-white">
         <div className="max-w-5xl mx-auto grid md:grid-cols-3 gap-6 mb-16">
           {[
-            { icon: "🏢", title: "Stand estándar", desc: "Módulo de 3×3m. Incluye estructura, iluminación, mesada y 2 sillas.", precio: "Consultar" },
-            { icon: "🌟", title: "Stand premium", desc: "Módulo de 6×3m. Incluye diseño personalizado, pantalla, y acceso a rondas de negocios.", precio: "Consultar" },
-            { icon: "🌐", title: "Patrocinio institucional", desc: "Presencia en toda la comunicación del evento. Ideal para empresas que buscan visibilidad regional.", precio: "Consultar" },
+            { icon: "🏢", title: "Stand estándar", desc: "Módulo de 3×3m. Incluye estructura, iluminación, mesada y 2 sillas." },
+            { icon: "🌟", title: "Stand premium", desc: "Módulo de 6×3m. Incluye diseño personalizado, pantalla, y acceso a rondas de negocios." },
+            { icon: "🌐", title: "Patrocinio institucional", desc: "Presencia en toda la comunicación del evento. Ideal para empresas que buscan visibilidad regional." },
           ].map((p) => (
             <div key={p.title} className="border border-[#d0c8ec] rounded-lg p-6 text-center">
               <div className="text-4xl mb-4">{p.icon}</div>
               <h3 className="font-[family-name:var(--font-display)] font-black text-[#1a1030] text-lg mb-3">{p.title}</h3>
-              <p className="text-sm text-gray-500 mb-4 leading-relaxed">{p.desc}</p>
-              <div className="font-bold text-[#6B3FA0] text-sm">{p.precio}</div>
+              <p className="text-sm text-gray-500 leading-relaxed">{p.desc}</p>
             </div>
           ))}
         </div>
 
-        <div className="max-w-2xl mx-auto">
-          <h2 className="font-[family-name:var(--font-display)] text-2xl font-black text-[#1a1030] mb-6 text-center">
-            Solicitar información
+        <div className="max-w-xl mx-auto text-center bg-[#f5f2fa] border-2 border-dashed border-[#d0c8ec] rounded-xl p-10">
+          <div className="text-5xl mb-4">🤝</div>
+          <h2 className="font-[family-name:var(--font-display)] text-2xl font-black text-[#1a1030] mb-3">
+            ¿Querés participar como expositor?
           </h2>
-
-          {sent ? (
-            <div className="text-center py-12 bg-[#f5f2fa] rounded-lg">
-              <div className="text-5xl mb-4">✅</div>
-              <div className="font-bold text-[#1a1030] text-lg mb-2">¡Solicitud enviada!</div>
-              <p className="text-gray-500 text-sm">
-                Un representante de la Cámara de Comercio Exterior de Jujuy se contactará con usted en las próximas 48 horas hábiles.
-              </p>
-            </div>
-          ) : (
-            <form onSubmit={handleSubmit} className="grid grid-cols-2 gap-4">
-              {[
-                { id: "empresa", label: "Empresa / Organización", span: 2, placeholder: "Nombre de la empresa" },
-                { id: "contacto", label: "Nombre y apellido", span: 1, placeholder: "María González" },
-                { id: "email", label: "Email", span: 1, placeholder: "contacto@empresa.com" },
-                { id: "telefono", label: "Teléfono", span: 1, placeholder: "+54 9 388 xxx-xxxx" },
-                { id: "sector", label: "Sector", span: 1, placeholder: "Ej: Minería, Turismo..." },
-              ].map((f) => (
-                <div key={f.id} className={f.span === 2 ? "col-span-2" : ""}>
-                  <label className="block text-xs font-semibold text-[#333] mb-1.5">{f.label}</label>
-                  <input
-                    type="text"
-                    required
-                    placeholder={f.placeholder}
-                    value={form[f.id as keyof typeof form]}
-                    onChange={(e) => setForm({ ...form, [f.id]: e.target.value })}
-                    className="w-full border border-[#d0c8ec] rounded px-3 py-2.5 text-sm focus:outline-none focus:border-[#6B3FA0] placeholder:text-gray-300"
-                  />
-                </div>
-              ))}
-              <div className="col-span-2">
-                <label className="block text-xs font-semibold text-[#333] mb-1.5">Mensaje (opcional)</label>
-                <textarea
-                  rows={3}
-                  placeholder="Contanos más sobre tu empresa y qué tipo de participación te interesa..."
-                  value={form.mensaje}
-                  onChange={(e) => setForm({ ...form, mensaje: e.target.value })}
-                  className="w-full border border-[#d0c8ec] rounded px-3 py-2.5 text-sm focus:outline-none focus:border-[#6B3FA0] placeholder:text-gray-300 resize-none"
-                />
-              </div>
-              <div className="col-span-2">
-                <button
-                  type="submit"
-                  className="w-full bg-[#00C4C8] text-white font-bold py-3 rounded hover:bg-[#009fa3] transition-colors text-sm uppercase tracking-wide"
-                >
-                  Enviar solicitud
-                </button>
-              </div>
-            </form>
-          )}
+          <p className="text-gray-500 text-sm mb-6 leading-relaxed">
+            Contactá a la Cámara de Comercio Exterior de Jujuy para conocer disponibilidad, precios y condiciones de participación.
+          </p>
+          <a
+            href="mailto:info@camcomexjujuy.com.ar?subject=Consulta%20expositor%20ExpoJuy%202026"
+            className="inline-block bg-[#6B3FA0] text-white font-bold text-sm px-8 py-3.5 rounded-lg hover:bg-[#4d2d78] transition-colors mb-3"
+          >
+            Solicitar información
+          </a>
+          <div className="text-xs text-gray-400">info@camcomexjujuy.com.ar · +54 9 388 421-2955</div>
         </div>
       </div>
     </div>
@@ -996,14 +1129,6 @@ function ComoLlegar() {
 }
 
 function Contacto() {
-  const [sent, setSent] = useState(false);
-  const [form, setForm] = useState({ nombre: "", email: "", consulta: "" });
-
-  function handleSubmit(e: React.FormEvent) {
-    e.preventDefault();
-    setSent(true);
-  }
-
   return (
     <div className="min-h-screen">
       <div className="bg-[#6B3FA0] py-16 px-6 md:px-10">
@@ -1017,11 +1142,12 @@ function Contacto() {
 
       <div className="py-16 px-6 md:px-10 bg-white">
         <div className="max-w-5xl mx-auto grid md:grid-cols-2 gap-16">
+          {/* Info */}
           <div>
             <h2 className="font-[family-name:var(--font-display)] text-2xl font-black text-[#1a1030] mb-6">
               Información de contacto
             </h2>
-            <div className="flex flex-col gap-6">
+            <div className="flex flex-col gap-6 mb-8">
               {[
                 { icon: "📞", label: "Teléfono", value: "+54 9 388 421-2955" },
                 { icon: "✉️", label: "Email", value: "info@camcomexjujuy.com.ar" },
@@ -1039,66 +1165,41 @@ function Contacto() {
                 </div>
               ))}
             </div>
-
-            <div className="mt-8 pt-8 border-t border-[#d0c8ec]">
-              <div className="text-xs font-bold text-[#333] uppercase tracking-wide mb-3">Organizador</div>
-              <div className="text-sm text-gray-600">
+            <div className="pt-6 border-t border-[#d0c8ec]">
+              <div className="text-xs font-bold text-[#333] uppercase tracking-wide mb-2">Organizador</div>
+              <div className="text-sm text-gray-600 mb-1">
                 <strong>Cámara de Comercio Exterior de Jujuy</strong><br />
                 34° aniversario institucional · 2026
               </div>
-              <a href="https://camcomexjujuy.com.ar" target="_blank" rel="noreferrer" className="text-[#6B3FA0] text-sm font-semibold hover:underline mt-1 block">
+              <a href="https://camcomexjujuy.com.ar" target="_blank" rel="noreferrer" className="text-[#6B3FA0] text-sm font-semibold hover:underline">
                 camcomexjujuy.com.ar →
               </a>
             </div>
           </div>
 
-          <div>
-            <h2 className="font-[family-name:var(--font-display)] text-2xl font-black text-[#1a1030] mb-6">
-              Envianos un mensaje
-            </h2>
-            {sent ? (
-              <div className="text-center py-12 bg-[#f5f2fa] rounded-lg">
-                <div className="text-5xl mb-4">✅</div>
-                <div className="font-bold text-[#1a1030] text-lg mb-2">¡Mensaje enviado!</div>
-                <p className="text-gray-500 text-sm">Te responderemos en las próximas 24 horas hábiles.</p>
-              </div>
-            ) : (
-              <form onSubmit={handleSubmit} className="flex flex-col gap-4">
-                {[
-                  { id: "nombre", label: "Nombre completo", placeholder: "María González" },
-                  { id: "email", label: "Email", placeholder: "maria@empresa.com" },
-                ].map((f) => (
-                  <div key={f.id}>
-                    <label className="block text-xs font-semibold text-[#333] mb-1.5">{f.label}</label>
-                    <input
-                      type="text"
-                      required
-                      placeholder={f.placeholder}
-                      value={form[f.id as keyof typeof form]}
-                      onChange={(e) => setForm({ ...form, [f.id]: e.target.value })}
-                      className="w-full border border-[#d0c8ec] rounded px-3 py-2.5 text-sm focus:outline-none focus:border-[#6B3FA0] placeholder:text-gray-300"
-                    />
-                  </div>
-                ))}
-                <div>
-                  <label className="block text-xs font-semibold text-[#333] mb-1.5">Consulta</label>
-                  <textarea
-                    rows={5}
-                    required
-                    placeholder="¿En qué podemos ayudarte?"
-                    value={form.consulta}
-                    onChange={(e) => setForm({ ...form, consulta: e.target.value })}
-                    className="w-full border border-[#d0c8ec] rounded px-3 py-2.5 text-sm focus:outline-none focus:border-[#6B3FA0] placeholder:text-gray-300 resize-none"
-                  />
+          {/* CTA sin form */}
+          <div className="flex flex-col gap-5">
+            {[
+              { icon: "🎟", titulo: "Entradas y accesos", desc: "Consultá precios, descuentos y puntos de venta para visitantes.", href: "mailto:info@camcomexjujuy.com.ar?subject=Consulta%20entradas%20ExpoJuy%202026" },
+              { icon: "🏢", titulo: "Participar como expositor", desc: "Información sobre stands, costos y modalidades de participación empresarial.", href: "mailto:info@camcomexjujuy.com.ar?subject=Consulta%20expositor%20ExpoJuy%202026" },
+              { icon: "🤝", titulo: "Patrocinios institucionales", desc: "Opciones de visibilidad y patrocinio para marcas e instituciones.", href: "mailto:info@camcomexjujuy.com.ar?subject=Consulta%20patrocinio%20ExpoJuy%202026" },
+              { icon: "🌍", titulo: "Delegaciones internacionales", desc: "Gestión de acreditaciones y rondas de negocios para delegaciones del exterior.", href: "mailto:info@camcomexjujuy.com.ar?subject=Delegacion%20internacional%20ExpoJuy%202026" },
+            ].map((item) => (
+              <a
+                key={item.titulo}
+                href={item.href}
+                className="group flex items-start gap-4 border border-[#d0c8ec] rounded-xl p-5 hover:border-[#6B3FA0] hover:bg-[#f5f2fa] transition-all"
+              >
+                <div className="w-11 h-11 bg-[#ede8f5] rounded-lg flex items-center justify-center text-2xl flex-shrink-0 group-hover:bg-[#6B3FA0]/10 transition-colors">
+                  {item.icon}
                 </div>
-                <button
-                  type="submit"
-                  className="bg-[#6B3FA0] text-white font-bold py-3 rounded hover:bg-[#4d2d78] transition-colors text-sm uppercase tracking-wide"
-                >
-                  Enviar consulta
-                </button>
-              </form>
-            )}
+                <div className="flex-1">
+                  <div className="font-bold text-[#1a1030] text-sm mb-1 group-hover:text-[#6B3FA0] transition-colors">{item.titulo}</div>
+                  <div className="text-xs text-gray-500 leading-relaxed">{item.desc}</div>
+                </div>
+                <div className="text-[#6B3FA0] opacity-0 group-hover:opacity-100 transition-opacity text-sm self-center">→</div>
+              </a>
+            ))}
           </div>
         </div>
       </div>
@@ -1310,7 +1411,8 @@ export default function App() {
         {page === "sobre" && <Sobre />}
         {page === "sectores" && <Sectores />}
         {page === "programa" && <Programa />}
-        {page === "expositores" && <Expositores setPage={setPage} />}
+        {page === "entradas" && <Entradas />}
+        {page === "expositores" && <Expositores />}
         {page === "llegada" && <ComoLlegar />}
         {page === "contacto" && <Contacto />}
       </main>
